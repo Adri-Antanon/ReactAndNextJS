@@ -7,7 +7,7 @@ function EventList({ items }) {
   return (
     <ul>
       {items.map((event) => (
-        <li className={classes.list}>
+        <li className={classes.list} key={event.id}>
           <EventItem
             id={event.id}
             date={event.date}
