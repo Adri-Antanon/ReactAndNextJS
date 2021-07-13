@@ -19,7 +19,7 @@ function EventItem({ title, image, date, location, id }) {
   const exploreLink = `/events/${id}`;
 
   return (
-    <li className={classes.item}>
+    <li className={classes.item} key={id}>
       <Image src={"/" + image} alt={title} height={300} width={250} />
       <div className={classes.content}>
         <div>
