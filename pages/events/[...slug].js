@@ -1,22 +1,37 @@
-import React from "react";
+import { useRouter } from "next/router";
+import { getFilteredEvents } from "../../dummy-data";
 
 const FilteredEvents = () => {
-  const obj = [
-    { id: "wacken", name: "Wacken", location: "Germany" },
-    { id: "resu", name: "Resurrection Fest", location: "Spain" },
-  ];
-  return (
-    <div>
-      <ul>
-        {obj.map((festival) => (
-          <li key={`${festival.id}`}>
-            Festival: <h2>{festival.name}</h2>
-            in: <p>{festival.location}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  const router = useRouter();
+  const filterData = router.query.slug;
+  if (!filterData) {
+    return <p className="center">Loading...</p>;
+  }
+
+  const filteredYear = filterData[0];
+  const filteredMonth = filterData[1];
+
+  const numYear = +filteredYear;
+  const numMonth = +filteredMonth;
+
+  if (
+    isNaN(numYear) ||
+    isNaN(numMonth) ||
+    numYear > 2030 ||
+    numYear < 2021 ||
+    numMonth < 1 ||
+    numMonth > 12
+  ) {
+    return <p>Invalid filter, please adjust your values!</p>;
+  }
+
+  const filteredEvents = getFilteredEvents({ year: numYear, month: numMonth });
+
+  if (!filteredEvents || filteredEvents.length === 0) {
+    return <p>No events found for the chosen filter!</p>;
+  }
+
+  return <div>Events Page</div>;
 };
 
 export default FilteredEvents;
