@@ -2,9 +2,9 @@ import fs from "fs/promises";
 import path from "path";
 
 function ProductDetailPage({ loadedProduct }) {
-  // if (!loadedProduct) {
-  //   return <p>Loading...</p>;
-  // }
+  if (!loadedProduct) {
+    return <p>Loading...</p>;
+  }
   return (
     <>
       <h1>{loadedProduct.title}</h1>
