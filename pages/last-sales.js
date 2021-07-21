@@ -3,9 +3,9 @@ import useSWR from "swr";
 
 const BASE_URL = "https://nextjsexample-e9557-default-rtdb.firebaseio.com/";
 
-function LastSalesPage() {
-  const [sales, setSales] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+function LastSalesPage(props) {
+  const [sales, setSales] = useState(props.sales);
+  // const [isLoading, setIsLoading] = useState(false);
 
   // Esta hook creado por Vercel sustituye al custom hook que he creado abajo
   const { data, error } = useSWR(BASE_URL + "/sales.json");
@@ -46,7 +46,7 @@ function LastSalesPage() {
     return <p>Failed to load...</p>;
   }
 
-  if (!data || !sales) {
+  if (!data && !sales) {
     return <p>Loading...</p>;
   }
 
@@ -59,6 +59,27 @@ function LastSalesPage() {
       ))}
     </ul>
   );
+}
+
+// La misma operación que he hecho arriba con getStaticProps
+export async function getStaticProps() {
+  const response = await fetch(BASE_URL + "/sales.json");
+  const data = await response.json();
+
+  const transformedSales = [];
+  for (const key in data) {
+    transformedSales.push({
+      id: key,
+      username: data[key].username,
+      volume: data[key].volume,
+    });
+  }
+
+  return {
+    props: {
+      sales: transformedSales,
+    },
+  };
 }
 
 export default LastSalesPage;
