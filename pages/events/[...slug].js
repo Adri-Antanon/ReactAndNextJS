@@ -7,6 +7,7 @@ import EventList from "../../components/events/eventList";
 import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/ui/button";
 import ErrorAlert from "../../components/ui/error-alert";
+import Head from "next/head";
 
 const FilteredEvents = (props) => {
   const [loadedEvents, setLoadedEvents] = useState();
@@ -67,6 +68,13 @@ const FilteredEvents = (props) => {
   ) {
     return (
       <>
+        <Head>
+          <title>Filtered Events</title>
+          <meta
+            name="description"
+            content={`All events for ${numMonth}/${numYear}.`}
+          />
+        </Head>
         <ErrorAlert>
           <p>Invalid filter, please adjust your values!</p>
         </ErrorAlert>
@@ -77,6 +85,10 @@ const FilteredEvents = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <>
+        <Head>
+          <title>Filtered Events</title>
+          <meta name="description" content="No events!" />
+        </Head>
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
