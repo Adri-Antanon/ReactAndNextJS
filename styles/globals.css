@@ -63,7 +63,7 @@ button {
   cursor: pointer;
 }
 
-.notFound {
+.center {
   display: flex;
   align-items: center;
   justify-content: center;

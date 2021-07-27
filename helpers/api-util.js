@@ -1,4 +1,5 @@
-const BASE_URL = "https://nextjsexample-e9557-default-rtdb.firebaseio.com/";
+export const BASE_URL =
+  "https://nextjsexample-e9557-default-rtdb.firebaseio.com/";
 
 export async function getAllEvents() {
   const response = await fetch(BASE_URL + "events.json");
