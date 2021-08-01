@@ -20,7 +20,7 @@ function EventItem({ title, image, date, location, id }) {
 
   return (
     <li className={classes.item} key={id}>
-      <Image src={"/" + image} alt={title} height={300} width={250} />
+      <Image src={"/" + image} alt={title} height={160} width={250} />
       <div className={classes.content}>
         <div>
           <h2>{title}</h2>
