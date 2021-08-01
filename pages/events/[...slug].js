@@ -35,19 +35,36 @@ const FilteredEvents = (props) => {
     }
   }, [data]);
 
+  let pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta name="description" content="A list of filtered events!" />
+    </Head>
+  );
+
   if (!loadedEvents) {
     return (
-      <div className="center">
-        <p>Loading...</p>
-      </div>
+      <>
+        {pageHeadData}
+        <p className="center">Loading...</p>
+      </>
     );
   }
-
   const filteredYear = filterData[0];
   const filteredMonth = filterData[1];
 
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth}/${numYear}`}
+      />
+    </Head>
+  );
 
   const filteredEvents = loadedEvents.filter((event) => {
     const eventDate = new Date(event.date);
@@ -68,13 +85,7 @@ const FilteredEvents = (props) => {
   ) {
     return (
       <>
-        <Head>
-          <title>Filtered Events</title>
-          <meta
-            name="description"
-            content={`All events for ${numMonth}/${numYear}.`}
-          />
-        </Head>
+        {pageHeadData}
         <ErrorAlert>
           <p>Invalid filter, please adjust your values!</p>
         </ErrorAlert>
@@ -85,10 +96,7 @@ const FilteredEvents = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <>
-        <Head>
-          <title>Filtered Events</title>
-          <meta name="description" content="No events!" />
-        </Head>
+        {pageHeadData}
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
@@ -103,6 +111,7 @@ const FilteredEvents = (props) => {
 
   return (
     <>
+      {pageHeadData}
       <ResultsTitle date={newDate} />
       <EventList items={filteredEvents}></EventList>
     </>
