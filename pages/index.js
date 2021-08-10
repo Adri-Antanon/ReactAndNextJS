@@ -13,7 +13,18 @@ export default function Home() {
     const enteredEmail = emailInputRef.current.value;
     const enteredFeedback = feedbackInputRef.current.value;
 
-    fetch(); //{email: "xxx@xx.com", text: "some text"}
+    const reqBody = { email: enteredEmail, text: enteredFeedback };
+
+    //{email: "xxx@xx.com", text: "some text"}
+    fetch("/api/feedback", {
+      method: "POST",
+      body: JSON.stringify(reqBody),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data));
   }
   return (
     <div>
