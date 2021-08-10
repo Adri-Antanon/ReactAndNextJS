@@ -9,6 +9,9 @@ export default function Home() {
 
   function submitFormHandler(event) {
     event.preventDefault();
+
+    const enteredEmail = emailInputRef.current.value;
+    const enteredFeedback = feedbackInputRef.current.value;
   }
   return (
     <div>
