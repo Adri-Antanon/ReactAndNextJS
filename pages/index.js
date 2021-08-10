@@ -12,6 +12,8 @@ export default function Home() {
 
     const enteredEmail = emailInputRef.current.value;
     const enteredFeedback = feedbackInputRef.current.value;
+
+    fetch(); //{email: "xxx@xx.com", text: "some text"}
   }
   return (
     <div>
