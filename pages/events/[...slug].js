@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { BASE_URL, getFilteredEvents } from "../../helpers/api-util";
-import { useEffect, useState } from "react";
 import useSWR from "swr";
+import Head from "next/head";
 
 import EventList from "../../components/events/eventList";
 import ResultsTitle from "../../components/events/results-title";
@@ -34,11 +35,19 @@ const FilteredEvents = (props) => {
     }
   }, [data]);
 
+  let pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta name="description" content={`A list of filtered events.`} />
+    </Head>
+  );
+
   if (!loadedEvents) {
     return (
-      <div className="center">
-        <p>Loading...</p>
-      </div>
+      <>
+        {pageHeadData}
+        <p className="center">Loading...</p>
+      </>
     );
   }
 
@@ -55,6 +64,16 @@ const FilteredEvents = (props) => {
       eventDate.getMonth() === numMonth - 1
     );
   });
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered Events</title>
+      <meta
+        name="description"
+        content={`All events for ${numMonth}/${numYear}.`}
+      />
+    </Head>
+  );
 
   if (
     isNaN(numYear) ||
@@ -77,6 +96,7 @@ const FilteredEvents = (props) => {
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
