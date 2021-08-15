@@ -3,7 +3,7 @@ function handler(req, res) {
 
   if (req.method === "POST") {
     //   add server-side validation
-    const { emailAddress, name, text } = req.body;
+    const { email, name, text } = req.body;
 
     if (
       !email.includes("@") ||
