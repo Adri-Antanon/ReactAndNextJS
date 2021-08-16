@@ -1,5 +1,13 @@
+// import { MongoClient } from "mongodb";
+
 export const BASE_URL =
   "https://nextjsexample-e9557-default-rtdb.firebaseio.com/";
+
+// export async function MONGO_DB() {
+//   await MongoClient.connect(
+//     "mongodb+srv://Adri:Contra123@nextjscluster.bykul.mongodb.net/Newsletter?retryWrites=true&w=majority"
+//   );
+// }
 
 export async function getAllEvents() {
   const response = await fetch(BASE_URL + "events.json");

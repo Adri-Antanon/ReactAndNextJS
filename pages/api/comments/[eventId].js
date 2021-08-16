@@ -1,5 +1,11 @@
-function handler(req, res) {
+import { MongoClient } from "mongodb";
+
+async function handler(req, res) {
   const eventId = req.query.eventId;
+
+  const client = await MongoClient.connect(
+    "mongodb+srv://Adri:Contra123@nextjscluster.bykul.mongodb.net/events?retryWrites=true&w=majority"
+  );
 
   if (req.method === "POST") {
     //   add server-side validation
@@ -16,12 +22,19 @@ function handler(req, res) {
       return;
     }
     const newComment = {
-      id: new Date().toISOString(),
       email,
       name,
       text,
+      eventId,
     };
-    console.log(newComment);
+    const db = client.db();
+
+    const result = await db.collection("comments").insertOne(newComment);
+
+    console.log(result);
+
+    newComment.id = result.insertedId;
+
     res.status(201).json({ message: "Added comment", comment: newComment });
   }
 
@@ -30,6 +43,8 @@ function handler(req, res) {
       { id: "c1", name: "Adri", text: "Hi, this is a comment" },
       { id: "c2", name: "Andrea", text: "Hi, I want a pet so I choose Zeus!" },
     ];
+
+    client.close();
 
     res.status(200).json({ comments: dummyList });
   }

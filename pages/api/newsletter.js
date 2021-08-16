@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+// import { MONGO_DB } from "../../helpers/api-util";
 
 async function handler(req, res) {
   if (req.method === "POST") {
@@ -8,13 +9,15 @@ async function handler(req, res) {
       return;
     }
 
+    // const client = await MONGO_DB();
+
     const client = await MongoClient.connect(
-      "mongodb+srv://Adri:Contra123@nextjscluster.bykul.mongodb.net/Newsletter?retryWrites=true&w=majority"
+      "mongodb+srv://Adri:Contra123@nextjscluster.bykul.mongodb.net/events?retryWrites=true&w=majority"
     );
 
     const db = client.db();
 
-    await db.collection("emails").insertOne({ email: userEmail });
+    await db.collection("newsletter").insertOne({ email: userEmail });
 
     client.close();
 
