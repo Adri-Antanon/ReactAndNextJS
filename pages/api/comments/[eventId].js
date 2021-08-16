@@ -1,11 +1,20 @@
-import { MongoClient } from "mongodb";
+import {
+  insertDocument,
+  connectDatabase,
+  getAllDocuments,
+  errorMessage,
+} from "../../../helpers/db-util";
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
 
-  const client = await MongoClient.connect(
-    "mongodb+srv://Adri:Contra123@nextjscluster.bykul.mongodb.net/events?retryWrites=true&w=majority"
-  );
+  let client;
+  try {
+    client = await connectDatabase();
+  } catch (error) {
+    errorMessage(res, 500, "Connecting to the database failed!");
+    return;
+  }
 
   if (req.method === "POST") {
     //   add server-side validation
@@ -19,6 +28,8 @@ async function handler(req, res) {
       text.trim() === ""
     ) {
       res.status(422).json({ message: "Invalid input." });
+      errorMessage(res, 422, "Invalid input");
+      client.close();
       return;
     }
     const newComment = {
@@ -27,27 +38,30 @@ async function handler(req, res) {
       text,
       eventId,
     };
-    const db = client.db();
 
-    const result = await db.collection("comments").insertOne(newComment);
-
-    console.log(result);
-
-    newComment.id = result.insertedId;
-
-    res.status(201).json({ message: "Added comment", comment: newComment });
+    let result;
+    try {
+      result = await insertDocument(client, "comments", newComment);
+      newComment.id = result.insertedId;
+      res.status(201).json({ message: "Added comment", comment: newComment });
+    } catch (error) {
+      errorMessage(res, 500, "Inserting data failed!");
+    }
   }
 
   if (req.method === "GET") {
-    const db = client.db();
-
-    const documents = await db
-      .collection("comments")
-      .find()
-      .sort({ _id: -1 })
-      .toArray();
-
-    res.status(200).json({ comments: documents });
+    let documents;
+    try {
+      documents = await getAllDocuments(
+        client,
+        "comments",
+        { _id: -1 },
+        { eventId: eventId }
+      );
+      res.status(200).json({ comments: documents });
+    } catch (error) {
+      errorMessage(res, 500, "Getting comments failed!");
+    }
   }
   client.close();
 }
