@@ -39,15 +39,17 @@ async function handler(req, res) {
   }
 
   if (req.method === "GET") {
-    const dummyList = [
-      { id: "c1", name: "Adri", text: "Hi, this is a comment" },
-      { id: "c2", name: "Andrea", text: "Hi, I want a pet so I choose Zeus!" },
-    ];
+    const db = client.db();
 
-    client.close();
+    const documents = await db
+      .collection("comments")
+      .find()
+      .sort({ _id: -1 })
+      .toArray();
 
-    res.status(200).json({ comments: dummyList });
+    res.status(200).json({ comments: documents });
   }
+  client.close();
 }
 
 export default handler;
