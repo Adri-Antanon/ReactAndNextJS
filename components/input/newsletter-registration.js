@@ -6,7 +6,7 @@ function NewsletterRegistration() {
   const emailInputRef = useRef();
   const notificationCtx = useContext(NotificationContext);
 
-  function registrationHandler(event) {
+  const registrationHandler = async (event) => {
     event.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
@@ -17,37 +17,65 @@ function NewsletterRegistration() {
       status: "pending",
     });
 
-    fetch("/api/newsletter", {
-      method: "POST",
-      body: JSON.stringify({ email: enteredEmail }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
+    // fetch("/api/newsletter", {
+    //   method: "POST",
+    //   body: JSON.stringify({ email: enteredEmail }),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((response) => {
+    //     if (response.ok) {
+    //       return response.json();
+    //     }
 
-        return response.json().then((data) => {
-          throw new Error(data.message || "Something went wrong!");
-        });
-      })
-      .then((data) => {
-        notificationCtx.showNotification({
-          title: "Success...",
-          message: "Succesfully registered for newsletter!",
+    //     // return response.json().then((data) => {
+    //     //   throw new Error(data.message || "Something went wrong!");
+    //     // });
+    //   })
+    //   .then((data) => {
+    //     notificationCtx.showNotification({
+    //       title: "Success...",
+    //       message: "Succesfully registered for newsletter!",
+    //       status: "success",
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     notificationCtx.showNotification({
+    //       title: "Error!",
+    //       message: error.message || "Something went wrong!",
+    //       status: "error",
+    //     });
+    //   });
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        body: JSON.stringify({ email: enteredEmail }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+
+      console.log(data);
+
+      if (response.ok) {
+        return notificationCtx.showNotification({
+          title: "Succes!",
+          message: "Successfully registered for newsletter!",
           status: "success",
         });
-      })
-      .catch((error) => {
-        notificationCtx.showNotification({
-          title: "Error!",
-          message: error.message || "Something went wrong!",
-          status: "error",
-        });
+      } else {
+        throw new Error(data.message || "Something went wrong!");
+      }
+    } catch (error) {
+      return notificationCtx.showNotification({
+        title: "Error!",
+        message: error.message || "Something went wrong!",
+        status: "error",
       });
-  }
+    }
+  };
 
   return (
     <section className={classes.newsletter}>
