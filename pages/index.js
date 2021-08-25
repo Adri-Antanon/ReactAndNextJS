@@ -1,8 +1,10 @@
+import { Hero, FeaturedPosts } from "../components/home-page";
+
 const HomePage = () => {
   return (
     <>
       <Hero />
-      <FeauturePosts />
+      <FeaturedPosts />
     </>
   );
 };
