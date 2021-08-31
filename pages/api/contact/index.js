@@ -1,4 +1,6 @@
-function handler(req, res) {
+import { MongoClient } from "mongodb";
+
+async function handler(req, res) {
   if (req.method === "POST") {
     const { email, name, message } = req.body;
 
@@ -20,8 +22,28 @@ function handler(req, res) {
       name,
       message,
     };
+    let client;
+    try {
+      client = await MongoClient.connect(
+        "mongodb+srv://Adri:Contra123@nextjscluster.bykul.mongodb.net/blog?retryWrites=true&w=majority"
+      );
+    } catch (error) {
+      res.status(500).json({ message: "Could not connect to database" });
+      return;
+    }
 
-    console.log(newMessage);
+    const db = client.db("blog");
+
+    try {
+      const result = await db.collection("messages").insertOne(newMessage);
+      newMessage._id = result.insertedId;
+    } catch (error) {
+      client.close();
+      res.status(500).json({ message: "Storing message failed!" });
+      return;
+    }
+
+    client.close();
 
     res
       .status(201)
