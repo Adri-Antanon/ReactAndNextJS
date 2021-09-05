@@ -7,7 +7,7 @@ export const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   const createUser = async (email, password) => {
-    const response = await fetch("api/signup", {
+    const response = await fetch("api/auth/signup", {
       method: "POST",
       body: JSON.stringify({ email, password }),
       headers: {
