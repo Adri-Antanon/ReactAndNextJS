@@ -3,30 +3,30 @@ import { useRouter } from "next/router";
 import { signIn } from "next-auth/client";
 import classes from "./auth-form.module.css";
 
+const createUser = async (email, password) => {
+  const response = await fetch("api/auth/signup", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong!");
+  }
+
+  return data;
+};
+
 export const AuthForm = () => {
-  const router = useRouter();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+
   const [isLogin, setIsLogin] = useState(true);
-
-  const createUser = async (email, password) => {
-    const router = useRouter();
-    const response = await fetch("api/auth/signup", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Something went wrong!");
-    }
-
-    return data;
-  };
+  const router = useRouter();
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
