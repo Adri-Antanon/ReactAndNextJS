@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 import FavoritesContext from "../../../store/favorite-context";
 
@@ -14,19 +14,19 @@ export const MainNavigation = () => {
       <nav>
         <ul>
           <li>
-            <Link to="/">All Meetups</Link>
+            <Link href="/">All Meetups</Link>
           </li>
           <li>
-            <Link to="/new-meetup">New Meetup</Link>
+            <Link href="/new-meetup">New Meetup</Link>
           </li>
-          <li>
-            <Link to="/favorites">
-              My Favorites{" "}
+          {/* <li>
+            <Link href="/favorites">
+              My Favorites
               <span className={classes.badge}>
                 {favoritesCtx.totalFavorites}
               </span>
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </header>
