@@ -1,28 +1,17 @@
 import { useContext } from "react";
-
+import { useRouter } from "next/router";
 import FavoritesContext from "../../../store/favorite-context";
 import { Card } from "../../ui";
 
 import classes from "./styles.module.css";
 
 export const MeetupItem = ({ image, title, address, description, id }) => {
-  const favoritesCtx = useContext(FavoritesContext);
+  const router = useRouter();
 
-  const itemIsFavorite = favoritesCtx.itemIsFavorite(id);
-
-  const toggleFavoriteStatusHandler = () => {
-    if (itemIsFavorite) {
-      favoritesCtx.removeFavorite(id);
-    } else {
-      favoritesCtx.addFavorite({
-        id,
-        title,
-        description,
-        image,
-        address,
-      });
-    }
+  const showDetailsHandler = () => {
+    router.replace(`/${id}`);
   };
+
   return (
     <li className={classes.item}>
       <Card>
@@ -35,9 +24,7 @@ export const MeetupItem = ({ image, title, address, description, id }) => {
           <p>{description}</p>
         </div>
         <div className={classes.actions}>
-          <button onClick={toggleFavoriteStatusHandler}>
-            {itemIsFavorite ? "Remove from favorite" : "To Favorites"}
-          </button>
+          <button onClick={showDetailsHandler}>Show Details</button>
         </div>
       </Card>
     </li>

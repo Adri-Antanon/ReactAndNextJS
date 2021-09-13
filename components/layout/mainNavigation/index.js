@@ -10,7 +10,7 @@ export const MainNavigation = () => {
 
   return (
     <header className={classes.header}>
-      <div className={classes.logo}>React Meetups</div>
+      <div className={classes.logo}>NextJS Meetups</div>
       <nav>
         <ul>
           <li>
@@ -19,14 +19,6 @@ export const MainNavigation = () => {
           <li>
             <Link href="/new-meetup">New Meetup</Link>
           </li>
-          {/* <li>
-            <Link href="/favorites">
-              My Favorites
-              <span className={classes.badge}>
-                {favoritesCtx.totalFavorites}
-              </span>
-            </Link>
-          </li> */}
         </ul>
       </nav>
     </header>
