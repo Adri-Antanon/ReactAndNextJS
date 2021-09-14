@@ -1,4 +1,4 @@
-import { Layout } from "../components/layout";
+import { useEffect, useState } from "react";
 import { MeetupList } from "../components/meetups";
 
 const DUMMY_MEETUPS = [
@@ -22,8 +22,17 @@ const DUMMY_MEETUPS = [
   },
 ];
 
-const HomePage = () => {
-  return <MeetupList meetups={DUMMY_MEETUPS} />;
+const HomePage = (props) => {
+  return <MeetupList meetups={props.meetups} />;
 };
+
+export async function getStaticProps() {
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS,
+    },
+    revalidate: 600, //La página se refresca cada 600 segundos
+  };
+}
 
 export default HomePage;
