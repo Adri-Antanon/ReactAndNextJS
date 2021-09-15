@@ -1,3 +1,6 @@
+import { ObjectId } from "mongodb";
+
+import { connectToDatabase } from "../../lib/db";
 import { MeetupDetail } from "../../components/meetups";
 
 const MeetupDetails = ({ meetupData }) => {
@@ -13,9 +16,23 @@ const MeetupDetails = ({ meetupData }) => {
 };
 
 export async function getStaticPaths() {
+  const client = await connectToDatabase();
+  const db = client.db();
+  const meetupsCollection = db.collection(`${process.env.mongodb_database}`);
+
+  const meetups = await meetupsCollection
+    .find({}, { projection: { _id: 1 } })
+    .toArray();
+
+  client.close();
+
   return {
-    paths: [{ params: { meetupId: "m1" } }],
-    fallback: "blocking",
+    paths: meetups.map((meetup) => ({
+      params: {
+        meetupId: meetup._id.toString(),
+      },
+    })),
+    fallback: false,
   };
 }
 
@@ -23,15 +40,23 @@ export async function getStaticProps(context) {
   // Fetch data for a single meetup
   const meetupId = context.params.meetupId;
 
+  const client = await connectToDatabase();
+  const db = client.db();
+  const meetupsCollection = db.collection(`${process.env.mongodb_database}`);
+
+  const selectedMeetup = await meetupsCollection.findOne({
+    _id: ObjectId(meetupId),
+  });
+  client.close();
+
   return {
     props: {
       meetupData: {
-        image:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg",
-        title: "A First Meetup",
-        address: "Some Street 5, Some City",
-        description: "This is the first meetup",
-        id: meetupId,
+        id: selectedMeetup._id.toString(),
+        title: selectedMeetup.title,
+        address: selectedMeetup.address,
+        description: selectedMeetup.description,
+        image: selectedMeetup.image,
       },
     },
   };

@@ -1,26 +1,6 @@
-import { useEffect, useState } from "react";
-import { MeetupList } from "../components/meetups";
+import { connectToDatabase } from "../lib/db";
 
-const DUMMY_MEETUPS = [
-  {
-    id: "m1",
-    title: "This is a first meetup",
-    address: "Meetupstreet 5, 12345 Meetup City",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg",
-    description:
-      "This is a first, amazing meetup which you definitely should not miss. It will be a lot of fun!",
-  },
-  {
-    id: "m2",
-    title: "This is a second meetup",
-    address: "Meetupstreet 5, 12345 Meetup City",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Stadtbild_M%C3%BCnchen.jpg/2560px-Stadtbild_M%C3%BCnchen.jpg",
-    description:
-      "This is a first, amazing meetup which you definitely should not miss. It will be a lot of fun!",
-  },
-];
+import { MeetupList } from "../components/meetups";
 
 const HomePage = (props) => {
   return <MeetupList meetups={props.meetups} />;
@@ -38,9 +18,22 @@ const HomePage = (props) => {
 
 // Better option getStaticProps
 export async function getStaticProps() {
+  const client = await connectToDatabase();
+  const db = client.db();
+  const meetupsCollection = db.collection(`${process.env.mongodb_database}`);
+
+  const meetups = await meetupsCollection.find().toArray();
+
+  client.close();
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS,
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(),
+      })),
     },
     revalidate: 600, //La página se refresca cada 600 segundos
   };

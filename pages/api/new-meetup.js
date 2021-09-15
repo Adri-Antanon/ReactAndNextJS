@@ -7,8 +7,6 @@ async function handler(req, res) {
     const client = await connectToDatabase();
     const db = client.db();
 
-    console.log(process.env.mongodb_database);
-
     const meetupsCollection = db.collection(`${process.env.mongodb_database}`);
 
     const result = await meetupsCollection.insertOne(data);
