@@ -1,9 +1,21 @@
-import { connectToDatabase } from "../lib/db";
+import Head from "next/head";
 
+import { connectToDatabase } from "../lib/db";
 import { MeetupList } from "../components/meetups";
 
 const HomePage = (props) => {
-  return <MeetupList meetups={props.meetups} />;
+  return (
+    <>
+      <Head>
+        <title>NextJS Meetups</title>
+        <meta
+          name="description"
+          content="Browse a huge list of highly active NextJS meetups!"
+        />
+      </Head>
+      <MeetupList meetups={props.meetups} />
+    </>
+  );
 };
 
 // export async function getServerSideProps(context) {

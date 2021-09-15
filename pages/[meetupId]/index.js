@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import Head from "next/head";
 
 import { connectToDatabase } from "../../lib/db";
 import { MeetupDetail } from "../../components/meetups";
@@ -6,12 +7,18 @@ import { MeetupDetail } from "../../components/meetups";
 const MeetupDetails = ({ meetupData }) => {
   const { image, title, address, description } = meetupData;
   return (
-    <MeetupDetail
-      image={image}
-      title={title}
-      address={address}
-      description={description}
-    />
+    <>
+      <Head>
+        <title>{`${title}`}</title>
+        <meta name="description" content={`${description}`} />
+      </Head>
+      <MeetupDetail
+        image={image}
+        title={title}
+        address={address}
+        description={description}
+      />
+    </>
   );
 };
 
